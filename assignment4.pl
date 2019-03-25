@@ -134,13 +134,13 @@ count(N1, N2, X) :- N1 == N2, X = N1.
 % We will only evaluate the first solution computed by your program. If there is
 % no solution, then your program should return false.
 % disarm(Adivisions, Bdivisions, Solution).
-disarm([], [], []).
+disarmPerms([], [], []).
 % finds disarm solutions, however, such solutions are unordered 
-disarm([Adivision1|Adivisions], [Bdivision1, Bdivision2|Bdivisions], [[[Adivision1],[Bdivision1, Bdivision2]]|Solution]) :-
+disarmPerms([Adivision1|Adivisions], [Bdivision1, Bdivision2|Bdivisions], [[[Adivision1],[Bdivision1, Bdivision2]]|Solution]) :-
     BdivisionDisarmSum is Bdivision1 + Bdivision2,
     BdivisionDisarmSum == Adivision1,
     disarm(Adivisions, Bdivisions, Solution).
-disarm([Adivision1, Adivision2|Adivisions], [Bdivision1|Bdivisions], [[[Adivision1, Adivision2],[Bdivision1]]|Solution]) :-
+disarmPerms([Adivision1, Adivision2|Adivisions], [Bdivision1|Bdivisions], [[[Adivision1, Adivision2],[Bdivision1]]|Solution]) :-
     AdivisionDisarmSum is Adivision1 + Adivision2,
     AdivisionDisarmSum == Bdivision1,
     disarm(Adivisions, Bdivisions, Solution).
@@ -158,6 +158,6 @@ disarmCompare(>,A,B) :-
     nth1(2,B,Y), list_sum(Y, YSum), 
     XSum >= YSum.
 
-disarmPerms(Adivisions, Bdivisions, Solution) :- permutation(Adivisions, AdvisionPerm), permutation(Bdivisions, BdivisionPerm),
-    disarm(AdvisionPerm, BdivisionPerm, UnsortedSolution),
+disarm(Adivisions, Bdivisions, Solution) :- permutation(Adivisions, AdvisionPerm), permutation(Bdivisions, BdivisionPerm),
+    disarmPerms(AdvisionPerm, BdivisionPerm, UnsortedSolution),
     predsort(disarmCompare, UnsortedSolution, Solution).
