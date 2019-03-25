@@ -5,7 +5,8 @@
 % There are no restrictions on functions or operators, so you can use the cut, 
 % negation and other operators.
 
-:- module(assignment4, [fourSquares/2, numBetween/2, count/3, disarm/3, disarmCompare/3]).
+:- module(assignment4, [validateFourSquares/2, count/3, numBetween/2, fourSquares/2,
+                        disarmPerms/3, list_sum/2, disarmCompare/3, disarm/3]).
 
 % Question 1 - Four squares
 %
@@ -69,17 +70,6 @@
 validateFourSquares(N, [SH]) :- SUM is (N-SH*SH), SUM == 0. 
 validateFourSquares(N, [SH|ST]) :- N2 is (N-SH*SH), validateFourSquares(N2, ST), length(ST, X), X @< 4.
 
-fourSquares(N, [S1, S2, S3, S4]) :- 
-    numBetween(N, BetweenNums), 
-    member(S1, BetweenNums), 
-    member(S2, BetweenNums), 
-    member(S3, BetweenNums), 
-    member(S4, BetweenNums), 
-    validateFourSquares(N, [S1, S2, S3, S4]).
-
-numBetween(N, List)  :- 
-    findall(X, count(0, N, X), List).
-
 count(N1, N2, X) :- 
     N1 @< N2, 
     (X = N1
@@ -90,6 +80,16 @@ count(N1, N2, X) :-
     ; N3 is N1 - 1, count(N3, N2, X)).
 count(N1, N2, X) :- N1 == N2, X = N1.
 
+numBetween(N, List)  :- 
+    findall(X, count(0, N, X), List).
+
+fourSquares(N, [S1, S2, S3, S4]) :- 
+    numBetween(N, BetweenNums), 
+    member(S1, BetweenNums), 
+    member(S2, BetweenNums), 
+    member(S3, BetweenNums), 
+    member(S4, BetweenNums), 
+    validateFourSquares(N, [S1, S2, S3, S4]).
 
 % Question 2 - War and Peace
 %
@@ -136,11 +136,13 @@ count(N1, N2, X) :- N1 == N2, X = N1.
 % disarm(Adivisions, Bdivisions, Solution).
 disarmPerms([], [], []).
 % finds disarm solutions, however, such solutions are unordered 
-disarmPerms([Adivision1|Adivisions], [Bdivision1, Bdivision2|Bdivisions], [[[Adivision1],[Bdivision1, Bdivision2]]|Solution]) :-
+disarmPerms([Adivision1|Adivisions], [Bdivision1, Bdivision2|Bdivisions], 
+    [[[Adivision1],[Bdivision1, Bdivision2]]|Solution]) :-
     BdivisionDisarmSum is Bdivision1 + Bdivision2,
     BdivisionDisarmSum == Adivision1,
     disarm(Adivisions, Bdivisions, Solution).
-disarmPerms([Adivision1, Adivision2|Adivisions], [Bdivision1|Bdivisions], [[[Adivision1, Adivision2],[Bdivision1]]|Solution]) :-
+disarmPerms([Adivision1, Adivision2|Adivisions], [Bdivision1|Bdivisions], 
+    [[[Adivision1, Adivision2],[Bdivision1]]|Solution]) :-
     AdivisionDisarmSum is Adivision1 + Adivision2,
     AdivisionDisarmSum == Bdivision1,
     disarm(Adivisions, Bdivisions, Solution).
@@ -150,14 +152,16 @@ list_sum([Item1,Item2 | Tail], Total) :-
     list_sum([Item1+Item2|Tail], Total).
 
 disarmCompare(<,A,B) :- 
-    nth1(2,A,X),  list_sum(X, XSum), 
+    nth1(2,A,X), list_sum(X, XSum), 
     nth1(2,B,Y), list_sum(Y, YSum), 
     XSum =< YSum.
 disarmCompare(>,A,B) :-
-    nth1(2,A,X),  list_sum(X, XSum), 
+    nth1(2,A,X), list_sum(X, XSum), 
     nth1(2,B,Y), list_sum(Y, YSum), 
     XSum >= YSum.
 
-disarm(Adivisions, Bdivisions, Solution) :- permutation(Adivisions, AdvisionPerm), permutation(Bdivisions, BdivisionPerm),
+disarm(Adivisions, Bdivisions, Solution) :- 
+    permutation(Adivisions, AdvisionPerm), 
+    permutation(Bdivisions, BdivisionPerm),
     disarmPerms(AdvisionPerm, BdivisionPerm, UnsortedSolution),
     predsort(disarmCompare, UnsortedSolution, Solution).
