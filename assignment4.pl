@@ -5,7 +5,7 @@
 % There are no restrictions on functions or operators, so you can use the cut, 
 % negation and other operators.
 
-:- module(assignment4, [fourSquares/2, count/3, disarm/3]).
+:- module(assignment4, [fourSquares/2, numBetween/2, count/3, disarm/3, disarmCompare/3]).
 
 % Question 1 - Four squares
 %
@@ -133,4 +133,31 @@ count(N1, N2, X) :- N1 == N2, X = N1.
 %
 % We will only evaluate the first solution computed by your program. If there is
 % no solution, then your program should return false.
-disarm(A, B, S).
+% disarm(Adivisions, Bdivisions, Solution).
+disarm([], [], []).
+% finds disarm solutions, however, such solutions are unordered 
+disarm([Adivision1|Adivisions], [Bdivision1, Bdivision2|Bdivisions], [[[Adivision1],[Bdivision1, Bdivision2]]|Solution]) :-
+    BdivisionDisarmSum is Bdivision1 + Bdivision2,
+    BdivisionDisarmSum == Adivision1,
+    disarm(Adivisions, Bdivisions, Solution).
+disarm([Adivision1, Adivision2|Adivisions], [Bdivision1|Bdivisions], [[[Adivision1, Adivision2],[Bdivision1]]|Solution]) :-
+    AdivisionDisarmSum is Adivision1 + Adivision2,
+    AdivisionDisarmSum == Bdivision1,
+    disarm(Adivisions, Bdivisions, Solution).
+
+list_sum([Item], Item).
+list_sum([Item1,Item2 | Tail], Total) :-
+    list_sum([Item1+Item2|Tail], Total).
+
+disarmCompare(<,A,B) :- 
+    nth1(2,A,X),  list_sum(X, XSum), 
+    nth1(2,B,Y), list_sum(Y, YSum), 
+    XSum =< YSum.
+disarmCompare(>,A,B) :-
+    nth1(2,A,X),  list_sum(X, XSum), 
+    nth1(2,B,Y), list_sum(Y, YSum), 
+    XSum >= YSum.
+
+disarmPerms(Adivisions, Bdivisions, Solution) :- permutation(Adivisions, AdvisionPerm), permutation(Bdivisions, BdivisionPerm),
+    disarm(AdvisionPerm, BdivisionPerm, UnsortedSolution),
+    predsort(disarmCompare, UnsortedSolution, Solution).
