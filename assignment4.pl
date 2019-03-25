@@ -64,8 +64,21 @@
 %
 % Giving credit where due this is Lagrange's four-square theorem:
 %   https://en.wikipedia.org/wiki/Lagrange's_four-square_theorem
-fourSquares(N, [SH]) :- SUM is (N-SH*SH), SUM == 0. 
-fourSquares(N, [SH|ST]) :- N2 is (N-SH*SH), fourSquares(N2, ST).
+
+% these two clauses can effectively check that a the sum of a list's elements squared equals N
+validateFourSquares(N, [SH]) :- SUM is (N-SH*SH), SUM == 0. 
+validateFourSquares(N, [SH|ST]) :- N2 is (N-SH*SH), validateFourSquares(N2, ST), length(ST, X), X @< 4.
+
+fourSquares(N, [S1, S2, S3, S4]) :- 
+    numBetween(N, BetweenNums), 
+    member(S1, BetweenNums), 
+    member(S2, BetweenNums), 
+    member(S3, BetweenNums), 
+    member(S4, BetweenNums), 
+    validateFourSquares(N, [S1, S2, S3, S4]).
+
+numBetween(N, List)  :- 
+    findall(X, count(0, N, X), List).
 
 count(N1, N2, X) :- 
     N1 @< N2, 
