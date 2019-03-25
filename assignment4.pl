@@ -61,6 +61,9 @@
 % X = 5;
 % X = 6;
 % X = 7;
+
+% giving credit where due this is Lagrange's four-square theorem:
+%   https://en.wikipedia.org/wiki/Lagrange's_four-square_theorem
 fourSquares(N, S).
 
 count(N1, N2, X).
