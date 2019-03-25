@@ -64,7 +64,8 @@
 %
 % Giving credit where due this is Lagrange's four-square theorem:
 %   https://en.wikipedia.org/wiki/Lagrange's_four-square_theorem
-fourSquares(N, S).
+fourSquares(N, [SH]) :- SUM is (N-SH*SH), SUM == 0. 
+fourSquares(N, [SH|ST]) :- N2 is (N-SH*SH), fourSquares(N2, ST).
 
 count(N1, N2, X) :- 
     N1 @< N2, 
