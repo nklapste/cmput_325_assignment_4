@@ -61,13 +61,20 @@
 % X = 5;
 % X = 6;
 % X = 7;
-
-% giving credit where due this is Lagrange's four-square theorem:
+%
+% Giving credit where due this is Lagrange's four-square theorem:
 %   https://en.wikipedia.org/wiki/Lagrange's_four-square_theorem
 fourSquares(N, S).
 
-count(N1, N2, X).
-
+count(N1, N2, X) :- 
+    N1 @< N2, 
+    (X = N1
+    ; N3 is N1 + 1, count(N3, N2, X)).
+count(N1, N2, X) :- 
+    N1 @> N2, 
+    (X = N1
+    ; N3 is N1 - 1, count(N3, N2, X)).
+count(N1, N2, X) :- N1 == N2, X = N1.
 
 
 % Question 2 - War and Peace
