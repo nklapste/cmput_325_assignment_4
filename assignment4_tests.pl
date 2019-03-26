@@ -18,6 +18,12 @@ test(fourSquares, all(S=[[0,0,0,0]])) :- fourSquares(0, S).
 test(fourSquares, fail) :- fourSquares(-1, _).
 
 % question 2
+test(disarm, all(S=[[]])) :- disarm([],[], S).
 test(disarm, true(S=[[[1,3],[4]], [[3,4],[7]], [[12],[3,9]], [[6,10],[16]]])) :- disarm([1, 3, 3, 4, 6, 10, 12], [3, 4, 7, 9, 16], S).
+test(disarm, fail) :- disarm([],[1], _).
+test(disarm, fail) :- disarm([1],[], _).
+test(disarm, fail) :- disarm([1,3],[2], _).
+test(disarm, fail) :- disarm([1,1],[1,1], _).
+test(disarm, fail) :- disarm([1,0],[1,0,0], _).
 
 :- end_tests(assignment4).
