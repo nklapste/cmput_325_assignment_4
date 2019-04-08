@@ -14,6 +14,8 @@ test(count, all(X=[3,2,1,0,-1,-2,-3])) :- count(3, -3, X).
 
 test(fourSquares, all(S=[[0,0,0,1], [0,0,1,0], [0,1,0,0], [1,0,0,0]])) :- fourSquares(1, S).
 test(fourSquares, all(S=[[0,0,1,1],[0,1,0,1],[0,1,1,0],[1,0,0,1],[1,0,1,0],[1,1,0,0]])) :- fourSquares(2, S).
+test(fourSquares, true(S=[0,1,1,1])) :- fourSquares(3, S).
+test(fourSquares, all(S=[[0,0,0,2],[0,0,2,0],[0,2,0,0],[1,1,1,1],[2,0,0,0]])) :- fourSquares(4, S).
 test(fourSquares, all(S=[[0,0,0,0]])) :- fourSquares(0, S).
 test(fourSquares, fail) :- fourSquares(-1, _).
 
